@@ -1,0 +1,521 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Haven's Computer Parts</title>
+  <style>
+    /* Base styles */
+    body {
+      font-family: Arial, sans-serif;
+      margin: 0;
+      padding: 0;
+      background-color: #f7f7f7;
+    }
+
+    header {
+      background-color: #232f3e;
+      color: white;
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      padding: 10px 20px;
+    }
+
+    header img {
+      height: 50px;
+    }
+
+    .search-bar-container {
+      flex-grow: 1;
+      margin: 0 20px;
+    }
+
+    .search-bar {
+      width: 100%;
+      padding: 8px;
+      font-size: 16px;
+    }
+
+    .sidebar {
+      width: 250px;
+      height: 100vh;
+      background-color: #fff;
+      padding: 20px;
+      position: fixed;
+      border-right: 1px solid #ddd;
+    }
+
+    .sidebar h3 {
+      margin-top: 0;
+    }
+
+    .sidebar button {
+      background-color: #f08804;
+      color: white;
+      border: none;
+      padding: 10px 20px;
+      cursor: pointer;
+      margin-top: 20px;
+      width: 100%;
+    }
+
+    .main-content {
+      margin-left: 270px;
+      padding: 20px;
+    }
+
+    .product-grid {
+      display: grid;
+      grid-template-columns: repeat(auto-fit, minmax(250px, 1fr));
+      gap: 20px;
+    }
+
+    .product {
+      background: #fff;
+      border: 1px solid #ddd;
+      padding: 20px;
+      text-align: center;
+      transition: transform 0.2s ease-in-out;
+    }
+
+    .product:hover {
+      transform: scale(1.05);
+    }
+
+    .product img {
+      max-width: 100%;
+      height: auto;
+    }
+
+    .product h3 {
+      margin: 10px 0;
+    }
+
+    .product button {
+      background-color: #f08804;
+      color: white;
+      border: none;
+      padding: 10px 20px;
+      cursor: pointer;
+    }
+
+    footer {
+      background-color: #232f3e;
+      color: white;
+      text-align: center;
+      padding: 10px 0;
+    }
+
+    /* Modal Styles */
+    .modal {
+      display: none;
+      position: fixed;
+      top: 0;
+      left: 0;
+      width: 100%;
+      height: 100%;
+      background: rgba(0, 0, 0, 0.5);
+      justify-content: center;
+      align-items: center;
+      z-index: 1000;
+    }
+
+    .modal-content {
+      background: white;
+      padding: 20px;
+      border-radius: 5px;
+      width: 400px;
+      max-width: 90%;
+    }
+
+    .modal h2,
+    .modal h3 {
+      margin-top: 0;
+    }
+
+    .btn {
+      background-color: #f08804;
+      color: white;
+      border: none;
+      padding: 10px 20px;
+      cursor: pointer;
+      margin-top: 10px;
+    }
+
+    .btn.cancel {
+      background-color: #d9534f;
+    }
+
+    .payment-details {
+      display: none;
+      margin-top: 10px;
+    }
+
+    .payment-popup {
+      display: none;
+      position: fixed;
+      top: 50%;
+      left: 50%;
+      transform: translate(-50%, -50%);
+      background-color: #fff;
+      padding: 20px;
+      border-radius: 5px;
+      box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
+      width: 80%;
+      max-width: 500px;
+    }
+
+    .payment-popup h3 {
+      margin-top: 0;
+    }
+
+    .payment-popup img {
+      width: 100%;
+      max-width: 250px;
+      height: auto;
+    }
+
+    .close-popup {
+      background-color: #d9534f;
+      color: white;
+      border: none;
+      padding: 8px 16px;
+      cursor: pointer;
+      margin-top: 10px;
+    }
+
+    .delivery-details {
+      margin-top: 20px;
+    }
+
+    .delivery-details input {
+      width: 100%;
+      padding: 8px;
+      margin-bottom: 10px;
+      box-sizing: border-box;
+    }
+
+    .delivery-details .receive-date {
+      font-weight: bold;
+    }
+
+    .cart-item {
+      display: flex;
+      justify-content: space-between;
+      margin: 10px 0;
+    }
+
+    .cart-item button {
+      background-color: #d9534f;
+      color: white;
+      padding: 5px 10px;
+      border: none;
+      cursor: pointer;
+    }
+    /* Modal Styles */
+.modal {
+  display: none;
+  position: fixed;
+  top: 0;
+  left: 0;
+  width: 100%;
+  height: 100%;
+  background: rgba(0, 0, 0, 0.5);
+  justify-content: center;
+  align-items: center;
+  z-index: 1000;
+}
+
+.modal-content {
+  background: white;
+  padding: 20px;
+  border-radius: 5px;
+  width: 400px;
+  max-width: 90%;
+  max-height: 80%;
+  overflow-y: auto;  /* Enables scrolling if content overflows */
+  box-sizing: border-box;
+}
+
+.modal h2,
+.modal h3 {
+  margin-top: 0;
+}
+
+.btn {
+  background-color: #f08804;
+  color: white;
+  border: none;
+  padding: 10px 20px;
+  cursor: pointer;
+  margin-top: 10px;
+}
+
+.btn.cancel {
+  background-color: #d9534f;
+}
+
+.payment-details {
+  display: none;
+  margin-top: 10px;
+}
+
+.payment-popup {
+  display: none;
+  position: fixed;
+  top: 50%;
+  left: 50%;
+  transform: translate(-50%, -50%);
+  background-color: #fff;
+  padding: 20px;
+  border-radius: 5px;
+  box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
+  width: 80%;
+  max-width: 500px;
+}
+
+.payment-popup h3 {
+  margin-top: 0;
+}
+
+.payment-popup img {
+  width: 100%;
+  max-width: 250px;
+  height: auto;
+}
+
+.close-popup {
+  background-color: #d9534f;
+  color: white;
+  border: none;
+  padding: 8px 16px;
+  cursor: pointer;
+  margin-top: 10px;
+}
+
+.delivery-details {
+  margin-top: 20px;
+}
+
+.delivery-details input {
+  width: 100%;
+  padding: 8px;
+  margin-bottom: 10px;
+  box-sizing: border-box;
+}
+
+.delivery-details .receive-date {
+  font-weight: bold;
+}
+
+.cart-item {
+  display: flex;
+  justify-content: space-between;
+  margin: 10px 0;
+}
+
+.cart-item button {
+  background-color: #d9534f;
+  color: white;
+  padding: 5px 10px;
+  border: none;
+  cursor: pointer;
+}
+.payment-details img {
+  max-width: 100%;    /* Ensures the image doesn't overflow */
+  max-height: 100%;   /* Ensures the image doesn't exceed the modal content's height */
+  object-fit: contain; /* Ensures the image scales without distortion */
+  width: auto;        /* Allows the image to maintain its original aspect ratio */
+  height: auto;       /* Allows the image to maintain its original aspect ratio */
+}
+
+
+  </style>
+</head>
+<body>
+  <header>
+    <img src="image/LOGO.png" alt="Haven's Computer Parts">
+    <div class="search-bar-container">
+      <input type="text" class="search-bar" placeholder="Search for products...">
+    </div>
+  </header>
+
+  <aside class="sidebar">
+    <h3>Categories</h3>
+    <label><input type="checkbox" value="gpu"> GPU</label><br>
+    <label><input type="checkbox" value="cpu"> CPU</label><br>
+    <label><input type="checkbox" value="ram"> RAM</label><br>
+    <label><input type="checkbox" value="ssd"> SSD</label><br>
+    <label><input type="checkbox" value="motherboard"> Motherboard</label><br>
+
+    <h3>Cart</h3>
+    <button id="cartBtn" class="cart-btn">🛒 (0)</button>
+
+    <!-- Checkout Button in Sidebar -->
+    <button class="checkout-btn" onclick="openModal('checkoutModal')">Proceed to Checkout</button>
+  </aside>
+
+  <main class="main-content">
+    <h2>Featured Products</h2>
+    <div class="product-grid">
+      <div class="product" data-name="ASUS ROG Strix GeForce RTX 4090">
+        <img src="image/ASUS ROG Strix GeForce RTX 4090.jpg" alt="ASUS ROG Strix GeForce RTX 4090">
+        <h3>ASUS ROG Strix GeForce RTX 4090</h3>
+        <p>Price: $1,499</p>
+        <button onclick="addToCart('ASUS ROG Strix GeForce RTX 4090', 1499)">Add to Cart</button>
+      </div>
+      <div class="product" data-name="AMD Ryzen 9 7950X">
+        <img src="image/AMD Ryzen 9 7950X.png" alt="AMD Ryzen 9 7950X">
+        <h3>AMD Ryzen 9 7950X</h3>
+        <p>Price: $699</p>
+        <button onclick="addToCart('AMD Ryzen 9 7950X', 699)">Add to Cart</button>
+      </div>
+      <div class="product" data-name="Corsair Vengeance RGB Pro RAM">
+        <img src="image/Corsair Vengeance LPX 16GB.jpg" alt="Corsair Vengeance RGB Pro RAM">
+        <h3>Corsair Vengeance RGB Pro RAM</h3>
+        <p>Price: $129</p>
+        <button onclick="addToCart('Corsair Vengeance RGB Pro RAM', 129)">Add to Cart</button>
+      </div>
+      <div class="product" data-name="Samsung 970 EVO SSD">
+        <img src="image/Samsung 970 EVO Plus.webp" alt="Samsung 970 EVO SSD">
+        <h3>Samsung 970 EVO SSD</h3>
+        <p>Price: $99</p>
+        <button onclick="addToCart('Samsung 970 EVO SSD', 99)">Add to Cart</button>
+      </div>
+      <div class="product" data-name="ASUS ROG Strix Z690-E Motherboard">
+        <img src="image/ASUS ROG Strix Z690-E.jpg" alt="ASUS ROG Strix Z690-E Motherboard">
+        <h3>ASUS ROG Strix Z690-E Motherboard</h3>
+        <p>Price: $699</p>
+        <button onclick="addToCart('ASUS ROG Strix Z690-E Motherboard', 699)">Add to Cart</button>
+      </div>
+    </div>
+  </main>
+
+  <footer>
+    <p>&copy; 2024 Haven's Computer Parts | All Rights Reserved</p>
+  </footer>
+
+  <!-- Modal for Checkout -->
+  <div id="checkoutModal" class="modal">
+    <div class="modal-content">
+      <h2>Checkout</h2>
+      <div id="billSummary"></div>
+
+      <!-- Payment Method Selection -->
+      <div>
+        <label><input type="radio" name="paymentMethod" value="gcash" onclick="selectPayment('gcash')"> GCash</label>
+        <label><input type="radio" name="paymentMethod" value="card" onclick="selectPayment('card')"> Card</label>
+      </div>
+
+      <div class="payment-details" id="gcashDetails" style="display:none;">
+        <p>Scan this for Gcash Payment</p>
+        <img src="image/gcash_barcode.jpg" alt="GCash Barcode">
+      </div>
+      <div class="payment-details" id="cardDetails" style="display:none;">
+        <p>Enter your card details below...</p>
+        <label>Card number:</label><input type="text" ><br><br>
+        <label>Expiry Date:</label></label><input type="text">
+      </div>
+
+      <!-- Delivery Details Section -->
+      <div class="delivery-details">
+        <h3>Delivery Details:</h3>
+        <input type="text" id="deliveryName" placeholder="Your Name" required>
+        <input type="text" id="deliveryAddress" placeholder="Delivery Address" required>
+        <p class="receive-date">Estimated Delivery Date: <span id="estimatedDate"></span></p>
+      </div>
+
+      <button class="btn cancel" onclick="closeModal('checkoutModal')">Cancel</button>
+      <button class="btn" onclick="finalizeOrder()">Place Order</button>
+    </div>
+  </div>
+
+  <!-- Payment Popup -->
+  <div id="paymentPopup" class="payment-popup">
+    <h3>Payment Method</h3>
+    <div id="paymentDetails"></div>
+    <button class="close-popup" onclick="closePaymentPopup()">Close</button>
+  </div>
+
+  <script>
+    let cart = [];
+
+    function addToCart(productName, price) {
+      const existingProduct = cart.find(item => item.name === productName);
+      if (existingProduct) {
+        existingProduct.quantity++;
+      } else {
+        cart.push({ name: productName, price, quantity: 1 });
+      }
+      updateCartDisplay();
+    }
+
+    function updateCartDisplay() {
+      const cartBtn = document.getElementById('cartBtn');
+      cartBtn.textContent = `🛒 (${cart.length})`;
+
+      const billSummary = document.getElementById('billSummary');
+      if (cart.length === 0) {
+        billSummary.innerHTML = '<p>Your cart is empty.</p>';
+      } else {
+        let total = 0;
+        billSummary.innerHTML = cart
+          .map((item, index) => {
+            total += item.price * item.quantity;
+            return `
+              <div class="cart-item">
+                <span>${item.name} - $${item.price} x ${item.quantity}</span>
+                <button onclick="removeFromCart(${index})">Remove</button>
+              </div>
+            `;
+          })
+          .join('');
+        billSummary.innerHTML += `<hr><strong>Total: $${total.toFixed(2)}</strong>`;
+      }
+    }
+
+    function removeFromCart(index) {
+      cart.splice(index, 1);
+      updateCartDisplay();
+    }
+
+    function openModal(modalId) {
+      document.getElementById(modalId).style.display = 'flex';
+      document.getElementById('estimatedDate').textContent = new Date().toLocaleDateString();
+    }
+
+    function closeModal(modalId) {
+      document.getElementById(modalId).style.display = 'none';
+    }
+
+    function selectPayment(method) {
+      const gcashDetails = document.getElementById('gcashDetails');
+      const cardDetails = document.getElementById('cardDetails');
+
+      if (method === 'gcash') {
+        gcashDetails.style.display = 'block';
+        cardDetails.style.display = 'none';
+      } else if (method === 'card') {
+        cardDetails.style.display = 'block';
+        gcashDetails.style.display = 'none';
+      }
+    }
+
+    function finalizeOrder() {
+      const name = document.getElementById('deliveryName').value;
+      const address = document.getElementById('deliveryAddress').value;
+
+      if (!name || !address) {
+        alert("Please fill in the delivery details.");
+        return;
+      }
+
+      alert(`Thank you for your order, ${name}! Your order will be delivered to ${address}.`);
+      closeModal('checkoutModal');
+      cart = [];
+      updateCartDisplay();
+    }
+  </script>
+</body>
+</html>
