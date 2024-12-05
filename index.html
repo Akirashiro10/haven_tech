@@ -509,6 +509,11 @@
     function finalizeOrder() {
       const name = document.getElementById('deliveryName').value;
       const address = document.getElementById('deliveryAddress').value;
+      document.getElementById(modalId).style.display = 'flex';
+  // Update the delivery date to 2 weeks from today when the modal opens
+  const estimatedDate = new Date();
+  estimatedDate.setDate(estimatedDate.getDate() + 14);  // Add 14 days to the current date
+  document.getElementById('estimatedDate').textContent = estimatedDate.toLocaleDateString();
 
       if (!name || !address) {
         alert("Please fill in the delivery details.");
